@@ -1,0 +1,20 @@
+@isTest
+private class DailyLeadProcessorTest {
+    public static String CRON_EXP = '0 0 0 15 3 ? 2022';
+    static testmethod void test() {    
+        List<Lead> leads = new List<Lead>();
+        // insert 200 leads
+        for (Integer i=0;i<200;i++) {
+            leads.add(new Lead(LastName='Lead '+i, Company='TestCompany'));
+        }
+        insert leads;
+        Test.startTest();
+            DailyLeadProcessor dlp = new DailyLeadProcessor();
+            String jobid = System.Schedule('leadtest',CRON_EXP,dlp);
+        
+        Test.stopTest();
+        
+        System.assertEquals(200, leads.size());
+    }
+    
+}
